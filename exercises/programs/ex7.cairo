@@ -48,7 +48,7 @@ func jhnn_pattern{bitwise_ptr: BitwiseBuiltin*, range_check_ptr}(value : felt, i
            if (idx == 0) { 
            // and we are at the MSB, we have a pattern
              return (true=1);   
-           } 
+           } else { 
            // otherwise we recursively apply the logic against a decremented index
             let succ : felt = jhnn_pattern(value=value, idx=idx-1, last_bit=bit, zero_trail=0); 
             return (true=succ); 
@@ -69,7 +69,7 @@ func pattern{bitwise_ptr: BitwiseBuiltin*, range_check_ptr}(
 ) -> (true: felt) {
     
     
-    let res : felt = jhnn_pattern(value=n, idx=15, last_bit=0, zero_trail=1);
+    let res : felt = jhnn_pattern(value=n, idx=8, last_bit=0, zero_trail=1);
     
     return (true=res);
 }
