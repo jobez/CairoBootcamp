@@ -16,7 +16,7 @@ func get_balance{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr,
 }() -> (res: felt) {
-    let new_balance : felt = new_balance.read();
+    let new_balance : felt = balance.read();
     return (res=new_balance);
     
 }
