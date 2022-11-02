@@ -37,7 +37,7 @@ func protected_function{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
     success: felt
 ) {
     Ownable.assert_only_owner();
-    return (success=TRUE);
+    return (success=1);
 }
 
 
@@ -65,7 +65,7 @@ func set_balance{
     pedersen_ptr: HashBuiltin*,
     range_check_ptr,
 }(amount: felt) {
-
+    protected_function();
     balance.write(amount);
     return ();
 
