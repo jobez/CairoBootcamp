@@ -5,9 +5,10 @@ import { Contract } from "starknet"
 import { toBN } from "starknet/dist/utils/number"
 
 import contractAbi from "./contract_abi.json"
+import jhnnContractAbi from "./jhnntract_abi.json"
 
 const contractAddress = "0x0704ed6b41f5d9dfdc5037c627d53ee52aef0675ed47ba59b57b8152c0144a9e"
-
+const jhnnContractAddress = "0x074ba908a279ed3046376c61819ad283690666e96321f51b4f3dc5b48c931385"
 
 function App() {
   const [provider, setProvider] = useState('')
@@ -37,10 +38,10 @@ function App() {
   const increaseBalanceFunction = async() => {
     try{
       // create a contract object based on the provider, address and abi
-      const contract = new Contract(contractAbi, contractAddress, provider)
+      const contract = new Contract(jhnnContractAbi, jhnnContractAddress, provider)
       
       // call the increase_balance function
-      await contract.increase_balance(13)
+      await contract.set_balance(13)
       
     }
     catch(error){
@@ -51,10 +52,12 @@ function App() {
   const getBalanceFunction = async() => {
     try{
       // create a contract object based on the provider, address and abi
-      const contract = new Contract(contractAbi, contractAddress, provider)
-      // call the function
+      const contract = new Contract(jhnnContractAbi, jhnnContractAddress, provider)
+        // call the function
+        console.log("get balance clicked");
       const _bal = await contract.get_balance()
-      // decode the result
+        // decode the result
+        console.log(_bal, "view response");  
       const _decodedBalance = toBN(_bal.res, 16).toString()
       // display the result
       setRetrievedBalance(_decodedBalance)
@@ -88,7 +91,7 @@ function App() {
               <div className="cardForm">
                 {/* <input type="text" className="input" placeholder="Enter Name" onChange={(e) => setName(e.target.value)} /> */}
 
-                <input type="submit" className="button" value="Add ETH  " onClick={() => increaseBalanceFunction()} />
+                <input type="submit" className="button" value="Increase Bal  " onClick={() => increaseBalanceFunction()} />
               </div>
 
               <hr />
