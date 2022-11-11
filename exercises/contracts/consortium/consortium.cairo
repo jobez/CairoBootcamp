@@ -119,9 +119,9 @@ func write_answers{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
     let answer : Answer = Answer(text=answer_text, votes=0);
     let offset_idx : felt = setter_idx + offset;
     proposals_answers.write(consortium_idx, proposal_idx, offset_idx, answer);
-    %{
-    print(f" {ids.offset=} {ids.offset_idx=} {ids.answer_text=}  {ids.setter_idx=} ")
-   %}
+   //  %{
+   //  print(f" {ids.offset=} {ids.offset_idx=} {ids.answer_text=}  {ids.setter_idx=} ")
+   // %}
     write_answers(consortium_idx, proposal_idx, answers+1, answer_idx, setter_idx+1, offset);
     return ();
 }
@@ -222,8 +222,11 @@ func tally{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 ) -> (win_idx: felt) {
     let proposal : Proposal = proposals.read(consortium_idx, proposal_idx);
     let answer_index = proposal.ans_idx;
-    let winner_idx : felt = find_highest(consortium_idx, proposal_idx, 0, answer_index, 0);
-
+   
+    let winner_idx : felt = find_highest(consortium_idx=consortium_idx, proposal_idx=proposal_idx, highest=0, idx=answer_index,  countdown=0);
+     %{
+    print(f"from tally we get {ids.winner_idx=} ")
+    %}
     return (winner_idx,);
 }
 
@@ -236,9 +239,31 @@ func find_highest{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     consortium_idx: felt, proposal_idx: felt, highest: felt, idx: felt, countdown: felt
 ) -> (idx: felt) {
 
+    if (idx == 0) {
+    %{
+    print(f"we finally return {ids.highest=} ")
+    %}
+      return (idx=highest);  
+    }
+
+    let answer : Answer = proposals_answers.read(consortium_idx, proposal_idx, idx-1);
+    let answer_votes : felt = answer.votes;
+    let current_answer_is_highest = is_le(countdown, answer_votes);
+    %{
+    print(f"{ids.idx=} {ids.answer_votes=} {ids.current_answer_is_highest=} {ids.countdown=} ")
+    %}
+    if (current_answer_is_highest == 1) {
+    
+     let res : felt = find_highest(consortium_idx=consortium_idx, proposal_idx=proposal_idx, highest=idx-1, idx=idx-1, countdown=answer_votes);
+    } else {
+
+     let res : felt = find_highest(consortium_idx=consortium_idx, proposal_idx=proposal_idx, highest=highest, idx=idx-1, countdown=countdown);
 
 
-    return (idx,);    
+    }
+
+
+    return (idx=res);    
 }
 
 // Loads it based on length, internall calls only
