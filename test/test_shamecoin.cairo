@@ -92,12 +92,12 @@ func test_send_only_one_shamecoin_admin{syscall_ptr: felt*, pedersen_ptr: HashBu
     
     assert balance_is_one = 1;
 
-    tempvar contract_address2;
-    %{ ids.contract_address2 = context.contract_a_address %}
+    tempvar contract_address;
+    %{ ids.contract_address = context.contract_a_address %}
 
     // but only one shamecoin
     %{ expect_revert() %}
-    ERC20.transfer(contract_address=contract_address2, recipient=TEST_ACC1, amount=Uint256(2, 0));
+    ERC20.transfer(contract_address=contract_address, recipient=TEST_ACC1, amount=Uint256(2, 0));
 
 
     %{ stop_prank_callable() %}
